@@ -43,7 +43,7 @@ class Home(ctk.CTk):
         self.nom_user = self.cursor.fetchall()
         self.cursor.execute("SELECT solde FROM compte WHERE id = %s", (id,))
         self.solde = self.cursor.fetchone()
-        self.solde_value = 6 if self.solde[0] == None else self.solde[0]
+        self.solde_value = 0 if self.solde[0] == None else self.solde[0]
         self.cursor.execute("SELECT IBAN FROM compte WHERE id = %s", (id,))
         self.iban = self.cursor.fetchone()
         self.cursor.execute("SELECT date_create FROM compte WHERE id = %s", (id,))
@@ -89,7 +89,7 @@ class Home(ctk.CTk):
 
         #Menu
         self.menu_items = [
-            {"icon": "🏠", "text": "Acceuil"},
+            {"icon": "🏠", "text": "Accueil"},
             {"icon": "📊", "text": "Compte"},
             {"icon": "💸", "text": "Transaction"},
             {"icon": "⚙️", "text": "Paramètres"}
@@ -97,7 +97,7 @@ class Home(ctk.CTk):
         
         for i, item in enumerate(self.menu_items):
             command = None
-            if item['text'] == "Acceuil":
+            if item['text'] == "Accueil":
                 command = self.reset_main_frame
             elif item['text'] == "Compte":
                 command = self.show_accounts
@@ -209,7 +209,7 @@ class Home(ctk.CTk):
                 {"label": "IBAN", "value": self.iban},
                 {"label": "Propriétaire", "value": "Toi"},
                 {"label": "Permission", "value": "Tout"},
-                {"label": "Creation", "value": self.date}
+                {"label": "Date de création", "value": self.date}
             ] 
             
             for i, item in enumerate(info_items):
@@ -293,6 +293,7 @@ class Home(ctk.CTk):
 
 
 
+    #Frame history
     def show_history_frame(self):
         for widget in self.main_frame.winfo_children():
             widget.destroy()
@@ -395,6 +396,8 @@ class Home(ctk.CTk):
         # Afficher les transactions (en utilisant les données non filtrées par défaut)
         self.display_transactions(self.transa)
 
+
+    #Show transaction on history_frame
     def display_transactions(self, transactions):
         for widget in self.container_frame.winfo_children():
             if widget.winfo_class() == "CTkScrollableFrame":
@@ -456,6 +459,7 @@ class Home(ctk.CTk):
                                     width=self.col_widths[5])
             date_label.grid(row=0, column=5, padx=5, pady=8, sticky="e")
 
+    #Reset Filters
     def reset_filters(self):
         self.date_from_entry.delete(0, 'end')
         self.date_to_entry.delete(0, 'end')
@@ -465,6 +469,7 @@ class Home(ctk.CTk):
         
         self.display_transactions(self.transa)
 
+    #Apply filters on transaction
     def apply_filters(self):
         date_from = self.date_from_entry.get()
         date_to = self.date_to_entry.get()
@@ -504,6 +509,7 @@ class Home(ctk.CTk):
         self.display_transactions(filtered_transactions)
 
 
+    #Frame for add money
     def add_money(self):
         for widget in self.main_frame.winfo_children():
             widget.destroy()
@@ -591,6 +597,8 @@ class Home(ctk.CTk):
                                     hover_color="#00AA55", corner_radius=5, width=120,command=self.add_transac)
         validate_button.grid(row=0, column=1)
 
+
+    #For validate add money 
     def add_transac(self):
         description = self.description_entry.get()
         day = self.day_entry.get()
@@ -701,6 +709,8 @@ class Home(ctk.CTk):
                         command=lambda acc_id=account_id: self.delete_account(acc_id))
             delete_btn.grid(row=0, column=1)
 
+
+    #Function for account view(sql)
     def view_account(self, account_id):
         self.id = account_id
         
@@ -718,6 +728,7 @@ class Home(ctk.CTk):
         
         self.reset_main_frame()
 
+    #Added account in frame(graphic) 
     def add_account(self):
         self.cursor.execute("SELECT COUNT(*) FROM compte WHERE user_id = %s", (self.user_id,))
         account_count = self.cursor.fetchone()[0]
@@ -787,6 +798,7 @@ class Home(ctk.CTk):
         self.iban_display.configure(text=self.iban)
         self.generated_iban = True
 
+    #For create new account
     def create_account(self):
         account_name = self.account_name_entry.get()
         
@@ -829,11 +841,13 @@ class Home(ctk.CTk):
         self.show_notif("Compte crée avec succés", "#32CD32")
         self.show_accounts()
 
+    #For create a notif
     def show_notif(self, message, couleur="#32CD32"):
         notification = ctk.CTkLabel(self.main_frame, text=message, font=("Poppins", 14, "bold"), text_color="white", fg_color=couleur, corner_radius=10)
         notification.place(relx=0.5, rely=0.13, anchor="center")
         self.after(3000, notification.destroy)
 
+    #Show settings
     def show_settings(self):
         for widget in self.main_frame.winfo_children():
             widget.destroy()
@@ -918,7 +932,6 @@ class Home(ctk.CTk):
         notification_options = [
             {"text": "Alertes de transactions", "default": True},
             {"text": "Alertes de solde bas", "default": True},
-            {"text": "Newsletter", "default": False},
             {"text": "Offres promotionnelles", "default": False}
         ]
         
@@ -948,7 +961,7 @@ class Home(ctk.CTk):
         theme_label.grid(row=0, column=0, padx=5, pady=5, sticky="w")
         
         self.theme_var = ctk.StringVar(value="Sombre")
-        theme_options = ["Sombre", "Clair", "Système"]
+        theme_options = ["Sombre", "Clair"]
         theme_dropdown = ctk.CTkOptionMenu(theme_frame, values=theme_options, variable=self.theme_var, width=150,
                                         command=self.change_theme)
         theme_dropdown.grid(row=0, column=1, padx=10, pady=5)
@@ -966,6 +979,7 @@ class Home(ctk.CTk):
                                 command=self.save_settings)
         save_btn.grid(row=0, column=1)
 
+    #For edit profil
     def edit_profile(self):
         edit_window = ctk.CTkToplevel(self)
         edit_window.title("Modifier mon profil")
@@ -1007,6 +1021,7 @@ class Home(ctk.CTk):
                                 command=edit_window.destroy)
         cancel_btn.grid(row=0, column=0, padx=10)
         
+        #Save changes
         def save_profile():
             self.cursor.execute("UPDATE utilisateur SET nom = %s, prenom = %s, mail = %s WHERE id = %s", 
                             (name_entry.get(), firstname_entry.get(), email_entry.get(), self.user_id))
@@ -1021,6 +1036,7 @@ class Home(ctk.CTk):
                                 command=save_profile)
         save_btn.grid(row=0, column=1, padx=10)
 
+    #Change password
     def change_password(self):
         password_window = ctk.CTkToplevel(self)
         password_window.title("Changer mon mot de passe")
@@ -1059,6 +1075,8 @@ class Home(ctk.CTk):
                                 command=password_window.destroy)
         cancel_btn.grid(row=0, column=0, padx=10)
         
+    
+        #Save password
         def save_password():
             current = current_pwd_entry.get()
             new = new_pwd_entry.get()
@@ -1116,23 +1134,17 @@ class Home(ctk.CTk):
                                     parent=self)
         
         if confirm:
-            try:
-                self.cursor.execute("DELETE FROM transaction WHERE id_compte = %s", (account_id,))
+            self.cursor.execute("DELETE FROM transaction WHERE id_compte = %s", (account_id,))
                 
-                self.cursor.execute("DELETE FROM compte WHERE id = %s", (account_id,))
+            self.cursor.execute("DELETE FROM compte WHERE id = %s", (account_id,))
                 
-                self.connection.commit()
+            self.connection.commit()
                 
-                messagebox.showinfo("Succès", "Le compte a été supprimé avec succès.", parent=self)
+            messagebox.showinfo("Succès", "Le compte a été supprimé avec succès.", parent=self)
                 
-                # Rafraîchir l'affichage des comptes
-                self.show_accounts()
+            self.show_accounts()
                 
-            except Exception as e:
-                # En cas d'erreur, annuler les changements et afficher l'erreur
-                self.connection.rollback()
-                messagebox.showerror("Erreur", f"Une erreur est survenue: {str(e)}", parent=self)
-
+    #Graphics of transaction
     def create_transaction_chart(self):
         for widget in self.chart_frame.winfo_children():
             widget.destroy()
@@ -1178,7 +1190,6 @@ class Home(ctk.CTk):
             error_label.place(relx=0.5, rely=0.5, anchor="center")
             return
         
-        # Créer la figure matplotlib
         fig, ax = plt.subplots(figsize=(5, 2.5))
         fig.patch.set_facecolor('#333333')
         ax.set_facecolor('#333333')
@@ -1420,6 +1431,7 @@ class Home(ctk.CTk):
                                     font=ctk.CTkFont(size=16, weight="bold"))
             no_data_label.grid(row=0, column=0, padx=20, pady=40)
 
+    #Transfer money with IBAN
     def transfer_money(self):
         for widget in self.main_frame.winfo_children():
             widget.destroy()
@@ -1446,15 +1458,15 @@ class Home(ctk.CTk):
                                 font=ctk.CTkFont(size=14, weight="bold"))
         iban_label.grid(row=1, column=0, padx=20, pady=10, sticky="w")
         
-        self.iban_entry = ctk.CTkEntry(form_frame, width=300, placeholder_text="FR76 XXXX XXXX XXXX XXXX XXXX XXX")
+        self.iban_entry = ctk.CTkEntry(form_frame, width=300, placeholder_text="FRXX XXXX X")
         self.iban_entry.grid(row=1, column=1, padx=20, pady=10, sticky="w")
         
         # Nom du destinataire
-        recipient_label = ctk.CTkLabel(form_frame, text="Nom du bénéficiaire:", 
+        recipient_label = ctk.CTkLabel(form_frame, text="Nom:", 
                                     font=ctk.CTkFont(size=14, weight="bold"))
         recipient_label.grid(row=2, column=0, padx=20, pady=10, sticky="w")
         
-        self.recipient_entry = ctk.CTkEntry(form_frame, width=300, placeholder_text="Nom du bénéficiaire")
+        self.recipient_entry = ctk.CTkEntry(form_frame, width=300, placeholder_text="Nom")
         self.recipient_entry.grid(row=2, column=1, padx=20, pady=10, sticky="w")
         
         # Montant du transfert
@@ -1520,6 +1532,7 @@ class Home(ctk.CTk):
                                     command=self.process_transfer)
         validate_button.grid(row=0, column=1)
 
+    #Validate transfert
     def process_transfer(self):
         recipient_iban = self.iban_entry.get()
         recipient_name = self.recipient_entry.get()
