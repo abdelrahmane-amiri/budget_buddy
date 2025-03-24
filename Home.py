@@ -11,7 +11,6 @@ import matplotlib
 matplotlib.use("TkAgg")
 from login import Login
 
-# Configuration de base
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("green")
 

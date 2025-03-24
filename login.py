@@ -69,7 +69,6 @@ class Login(ctk.CTk):
             self, text=self.icone, font=("Poppins", 14), width=40, height=40, fg_color="#000000",hover_color="#333333", command=self.mode)
         self.mode_button.place(relx=1.0, rely=1.0, anchor='se', x=-10, y=-10)
 
-
     def register_wid(self):
         self.clear()
 

@@ -5,8 +5,6 @@ from PIL import Image, ImageTk
 import random
 from datetime import datetime
 
-
-
 class GestionComptes(ctk.CTk):
     def __init__(self, user_id):
         super().__init__()
@@ -32,7 +30,6 @@ class GestionComptes(ctk.CTk):
             "5.jpg",
             "6.jpg"
         ]
-        
         self.display_accounts()
 
     def mode(self):
