@@ -23,12 +23,12 @@ class GestionComptes(ctk.CTk):
         self.cursor = self.connection.cursor()
 
         self.images = [
-            "th.jpg",
-            "2.jpg",
-            "3.jpg",
-            "4.jpg",
-            "5.jpg",
-            "6.jpg"
+            "mo.jpg",
+            "mol.jpg",
+            "molo.jpg",
+            "molot.jpg",
+            "mololo.jpg",
+            "fot.jpg"
         ]
         self.display_accounts()
 

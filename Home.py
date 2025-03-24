@@ -19,7 +19,7 @@ class Home(ctk.CTk):
         super().__init__()
 
         # fenêtre
-        self.title("Banque RashToz")
+        self.title("Banque Nook")
         self.geometry("1000x600")
         self.configure(fg_color="#1A1A1A")
 
@@ -61,7 +61,7 @@ class Home(ctk.CTk):
         self.sidebar_frame.grid_rowconfigure(10, weight=1)
 
         # Logo et titre
-        self.logo_label = ctk.CTkLabel(self.sidebar_frame, text="RASHTOZ", font=ctk.CTkFont(size=20, weight="bold"))
+        self.logo_label = ctk.CTkLabel(self.sidebar_frame, text="NOOK", font=ctk.CTkFont(size=20, weight="bold"))
         self.logo_label.grid(row=0, column=0, padx=20, pady=(20, 0))
         self.logo_label2 = ctk.CTkLabel(self.sidebar_frame, text="BANQUE", font=ctk.CTkFont(size=20, weight="bold"), text_color="#00FF7F")
         self.logo_label2.grid(row=1, column=0, padx=20, pady=(0, 20))
