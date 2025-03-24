@@ -30,7 +30,6 @@ class GestionComptes(ctk.CTk):
             "5.jpg",
             "6.jpg"
         ]
-        
         self.display_accounts()
 
     def mode(self):
